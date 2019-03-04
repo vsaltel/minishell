@@ -6,11 +6,42 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:07:06 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/04 16:18:50 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/04 18:31:05 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void		change_oldpwd(char *pwd, char **env)
+{
+	int j;
+	char *tmp;
+
+	if (pwd)
+	{
+		j = 0;
+		while (env[j] && ft_strncmp(env[j], "OLDPWD=", 7) != 0)
+			j++;
+		tmp = env[j];
+		env[j] = ft_strjoin("OLDPWD=", pwd + 4);
+		free(tmp);
+	}
+}
+
+static void		change_pwd(char **pwd)
+{
+	char *tmp;
+	char *tmp2;
+
+	if (*pwd)
+	{
+		tmp2 = getcwd(NULL, 0);
+		tmp = *pwd;
+		*pwd = ft_strjoin("PWD=", tmp2);
+		free(tmp);
+		free(tmp2);
+	}
+}
 
 static void		cd_home(char *pwd, char **env)
 {
@@ -18,15 +49,10 @@ static void		cd_home(char *pwd, char **env)
 	int		j;
 
 	j = 0;
-	while (env[j] && ft_strncmp(env[j], "OLDPWD=", 7) != 0)
-		j++;
-	tmp = env[j];
-	env[j] = ft_strjoin("OLDPWD=", pwd + 4);
-	free(tmp);
-	j = 0;
+	change_oldpwd(pwd, env);
 	while (env[j] && ft_strncmp(env[j], "HOME=", 5) != 0)
 		j++;
-	chdir(env[j] + 5);
+	env[j] ? chdir(env[j] + 5) : chdir("/");
 }
 
 static void		cd_other(char *pwd, char **argv, char **env)
@@ -38,11 +64,7 @@ static void		cd_other(char *pwd, char **argv, char **env)
 	j = 0;
 	if (!(j = test_access(argv[1])))
 	{
-		while (env[j] && ft_strncmp(env[j], "OLDPWD=", 7) != 0)
-			j++;
-		tmp = env[j];
-		env[j] = ft_strjoin("OLDPWD=", pwd + 4);
-		free(tmp);
+		change_oldpwd(pwd, env); 
 		if (argv[1][0] != '/')
 		{
 			tmp = getcwd(NULL, 0);
@@ -58,18 +80,6 @@ static void		cd_other(char *pwd, char **argv, char **env)
 		j == 1 ? error_exec(4, "cd", argv[1]) : error_exec(j, "cd", argv[1]);
 }
 
-static void		change_pwd(char **pwd)
-{
-	char *tmp;
-	char *tmp2;
-
-	tmp2 = getcwd(NULL, 0);
-	tmp = *pwd;
-	*pwd = ft_strjoin("PWD=", tmp2);
-	free(tmp);
-	free(tmp2);
-}
-
 int				builtin_cd(int argc, char **argv, char ***envi)
 {
 	int		i;
@@ -77,7 +87,7 @@ int				builtin_cd(int argc, char **argv, char ***envi)
 
 	env = *envi;
 	i = 0;
-	while (ft_strncmp(env[i], "PWD=", 4) != 0)
+	while (env[i] && ft_strncmp(env[i], "PWD=", 4) != 0)
 		i++;
 	if (argc < 2)
 		cd_home(env[i], env);

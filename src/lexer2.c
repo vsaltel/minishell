@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 17:18:53 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/04 14:36:20 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/04 18:09:28 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,19 @@ char	*tilde_exceptions(char **e, char **env)
 	{
 		while (env[i] && ft_strncmp(env[i], "HOME=", 5))
 			i++;
-		return (*e = ft_strjoin(env[i] + 5, t + 1));
+		return (env[i] ? *e = ft_strjoin(env[i] + 5, t + 1) : NULL);
 	}
 	else if (t[0] == '~' && t[1] == '-' && (t[2] == '\0' || t[2] == '/'))
 	{
 		while (env[i] && ft_strncmp(env[i], "OLDPWD=", 7))
 			i++;
-		return (*e = ft_strjoin(env[i] + 7, t + 2));
+		return (env[i] ? *e = ft_strjoin(env[i] + 7, t + 2) : NULL);
 	}
 	else if (t[0] == '~' && t[1] == '+' && (t[2] == '\0' || t[2] == '/'))
 	{
 		while (env[i] && ft_strncmp(env[i], "PWD=", 4))
 			i++;
-		return (*e = ft_strjoin(env[i] + 4, t + 2));
+		return (env[i] ? *e = ft_strjoin(env[i] + 4, t + 2) : NULL);
 	}
 	return (NULL);
 }
