@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:06:41 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/03 12:06:57 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/04 13:27:06 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 int		builtin_env(int argc, char **argv, char ***envi)
 {
+	char	**env;
+	int		i;
+
 	(void)argc;
 	(void)argv;
-	char **env;
-	int	i;
-
 	env = *envi;
 	if (!(env && *env))
 		return (-1);

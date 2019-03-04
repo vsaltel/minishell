@@ -6,23 +6,23 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 14:40:10 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/03 18:08:54 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/04 16:13:38 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	             test_access(char *path)
+int		test_access(char *path)
 {
-	char *tmp;
-	int i;
+	char	*tmp;
+	int		i;
 
 	tmp = NULL;
 	i = 1;
 	while (path[i])
 	{
 		while (path[i] && path[i] != '/')
-			i++; 
+			i++;
 		tmp = ft_strsub(path, 0, i);
 		if (access(tmp, F_OK) == -1)
 			return (1);
@@ -35,7 +35,7 @@ int	             test_access(char *path)
 	return (0);
 }
 
-int	error_exec(int no, char *prog, char *display)
+int		error_exec(int no, char *prog, char *display)
 {
 	if (no == 0)
 		return (0);

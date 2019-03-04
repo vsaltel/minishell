@@ -6,13 +6,13 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 12:53:52 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/03 18:41:08 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/04 14:39:01 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*sstrncpy(char *dst, const char *src, size_t len)
+static char		*sstrncpy(char *dst, const char *src, size_t len)
 {
 	char	*s;
 	char	*d;
@@ -35,35 +35,47 @@ char	*sstrncpy(char *dst, const char *src, size_t len)
 	return (d);
 }
 
-t_oplist	searchTokenType(char *s)
+static t_oplist	searchtokentype(char *s)
 {
-	size_t i;
-	const t_oplist not_found = {NULL, 0, TOKEN_NULL};
+	size_t			i;
+	const t_oplist	not_found = {NULL, 0, TOKEN_NULL};
 
 	i = 0;
-	while (existing_token[i].op)
+	while (g_existing_token[i].op)
 	{
-			if (ft_strncmp(s, existing_token[i].op, existing_token[i].size) == 0)
-				return (existing_token[i]);
+		if (ft_strncmp(s, g_existing_token[i].op, g_existing_token[i].size) == 0)
+			return (g_existing_token[i]);
 		i++;
 	}
 	return (not_found);
 }
 
-void		addToLexer(t_lexer* lexer, const char *text, size_t text_size, e_token_type type)
+static t_token	*create_token(const char *text, size_t text_size, t_token_type type)
 {
 	t_token *item;
-	t_token *current;
 
 	if (!(item = malloc(sizeof(t_token))))
 		exit(1);
 	if (!(item->content = malloc(sizeof(char) * (text_size + 1))))
 		exit(1);
 	item->type = type;
-	sstrncpy(item->content, text, text_size);
+	ft_strncpy(item->content, text, text_size);
 	item->content[text_size] = '\0';
 	item->size = text_size;
 	item->next = NULL;
+	return (item);
+}
+
+static void		addtolexer(t_lexer *lexer, t_token *item, char **env)
+{
+	t_token *current;
+	char	*tmp;
+
+	set_token_env(item, env);
+	tmp = ft_strdup(item->content);
+	sstrncpy(item->content, tmp, ft_strlen(tmp));
+	item->size = ft_strlen(item->content);
+	free(tmp);
 	if (!lexer->tokens)
 		lexer->tokens = item;
 	else
@@ -76,11 +88,11 @@ void		addToLexer(t_lexer* lexer, const char *text, size_t text_size, e_token_typ
 	lexer->size++;
 }
 
-int			quote(t_lexer *lexer, const char **prev, char **s)
+static int		quote(t_lexer *lexer, const char **prev, char **s, char **env)
 {
-	const char *prev1;
-	char *s1;
-	int i;
+	const char	*prev1;
+	char		*s1;
+	int			i;
 
 	i = 2;
 	prev1 = *prev;
@@ -97,14 +109,14 @@ int			quote(t_lexer *lexer, const char **prev, char **s)
 	}
 	if (*s1 == '\0')
 		return (0);
-	addToLexer(lexer, prev1 + 1, s1 - prev1 - 1, TOKEN_NAME);
+	addtolexer(lexer, create_token(prev1 + 1, s1 - prev1 - 1, TOKEN_NAME), env);
 	prev1 = ++s1;
 	*prev = prev1;
 	*s = s1;
 	return (1);
 }
 
-int			fill_lexer(char *s, t_lexer *lexer)
+int				fill_lexer(char *s, t_lexer *lexer, char **env)
 {
 	t_oplist	current;
 	const char	*prev;
@@ -119,19 +131,20 @@ int			fill_lexer(char *s, t_lexer *lexer)
 			s++;
 		else
 		{
-			current = searchTokenType(s);
+			current = searchtokentype(s);
 			if ((current.op != 0 || *s == '"' || *s == '\'') && prev != s)
-				addToLexer(lexer, prev, s - prev, TOKEN_NAME);
+				addtolexer(lexer, create_token(prev, s - prev, TOKEN_NAME), env);
 			if (current.op != 0)
 			{
 				s += current.size;
 				if (current.type != TOKEN_EAT)
-					addToLexer(lexer, current.op, current.size, current.type);
+					addtolexer(lexer, create_token(current.op, current.size, current.type), env);
 				prev = s;
 			}
-			else if ((begin == s || *(s - 1) != '\\') && (*s == '"' || *s == '\''))
+			else if ((begin == s || *(s - 1) != '\\') &&
+					(*s == '"' || *s == '\''))
 			{
-				if (!quote(lexer, &prev, &s))
+				if (!quote(lexer, &prev, &s, env))
 					return (0);
 			}
 			else
@@ -139,6 +152,6 @@ int			fill_lexer(char *s, t_lexer *lexer)
 		}
 	}
 	if (prev != s)
-		addToLexer(lexer, prev, s - prev, TOKEN_NAME);
+		addtolexer(lexer, create_token(prev, s - prev, TOKEN_NAME), env);
 	return (1);
 }

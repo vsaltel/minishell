@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:08:41 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/03 18:00:57 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/04 15:26:51 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int		existing_variable(int argc, char **argv, char **env)
 {
-	int i;
-	char *tmp;
+	int		i;
+	char	*tmp;
 
 	i = -1;
 	while (env[++i])
@@ -35,11 +35,11 @@ static int		existing_variable(int argc, char **argv, char **env)
 	return (0);
 }
 
-static void		create_variable(int argc, char **argv, char ***env)
+void			create_variable(int argc, char **argv, char ***env)
 {
-	char **tab;	
-	char *tmp;
-	int i;
+	char	**tab;
+	char	*tmp;
+	int		i;
 
 	tab = copy_env(*env, 1);
 	i = 0;
@@ -57,11 +57,11 @@ static void		create_variable(int argc, char **argv, char ***env)
 	*env = tab;
 }
 
-int		builtin_setenv(int argc, char **argv, char ***envi)
+int				builtin_setenv(int argc, char **argv, char ***envi)
 {
-	int i;
-	char *tmp;
-	char **env;
+	int		i;
+	char	*tmp;
+	char	**env;
 
 	env = *envi;
 	if (argc < 2)
@@ -70,7 +70,7 @@ int		builtin_setenv(int argc, char **argv, char ***envi)
 	while (argv[1][++i])
 		if (!ft_isalnum(argv[1][i]))
 			return (error_exec(3, "setenv", NULL));
-	if (!existing_variable(argc, argv, env))	
+	if (!existing_variable(argc, argv, env))
 		create_variable(argc, argv, envi);
 	return (0);
 }

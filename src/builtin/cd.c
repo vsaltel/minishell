@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:07:06 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/03 18:06:04 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/04 16:18:50 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,40 +14,45 @@
 
 static void		cd_home(char *pwd, char **env)
 {
-	char *tmp;
-	int j;
+	char	*tmp;
+	int		j;
 
 	j = 0;
 	while (env[j] && ft_strncmp(env[j], "OLDPWD=", 7) != 0)
-		j++;	
+		j++;
 	tmp = env[j];
 	env[j] = ft_strjoin("OLDPWD=", pwd + 4);
 	free(tmp);
 	j = 0;
 	while (env[j] && ft_strncmp(env[j], "HOME=", 5) != 0)
-		j++;	
+		j++;
 	chdir(env[j] + 5);
 }
 
 static void		cd_other(char *pwd, char **argv, char **env)
 {
-	int j;
-	char *tmp;
-	char *tmp2;
+	int		j;
+	char	*tmp;
+	char	*tmp2;
 
 	j = 0;
-	if (!(j = test_access(argv[1]))/* && S_ISDIR(stat(argv[1], NULL))*/)
+	if (!(j = test_access(argv[1])))
 	{
 		while (env[j] && ft_strncmp(env[j], "OLDPWD=", 7) != 0)
-			j++;	
+			j++;
 		tmp = env[j];
 		env[j] = ft_strjoin("OLDPWD=", pwd + 4);
 		free(tmp);
-		tmp = getcwd(NULL, 0);
-		tmp2 = str_pathfile(tmp, argv[1]);	
-		free(tmp);
-		chdir(tmp2);
-		free(tmp2);
+		if (argv[1][0] != '/')
+		{
+			tmp = getcwd(NULL, 0);
+			tmp2 = str_pathfile(tmp, argv[1]);
+			free(tmp);
+			chdir(tmp2);
+			free(tmp2);
+		}
+		else
+			chdir(argv[1]);
 	}
 	else
 		j == 1 ? error_exec(4, "cd", argv[1]) : error_exec(j, "cd", argv[1]);
@@ -60,15 +65,15 @@ static void		change_pwd(char **pwd)
 
 	tmp2 = getcwd(NULL, 0);
 	tmp = *pwd;
-	*pwd = ft_strjoin("PWD=", tmp2);	
+	*pwd = ft_strjoin("PWD=", tmp2);
 	free(tmp);
 	free(tmp2);
 }
 
 int				builtin_cd(int argc, char **argv, char ***envi)
 {
-	int i;
-	char **env;
+	int		i;
+	char	**env;
 
 	env = *envi;
 	i = 0;

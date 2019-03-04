@@ -6,13 +6,13 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 19:35:32 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/03 17:56:03 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/04 13:23:09 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		true_variable(char *env, char *arg)
+int				true_variable(char *env, char *arg)
 {
 	int j;
 
@@ -45,8 +45,8 @@ static size_t	strl_pathfile(const char *s1, const char *s2)
 
 char			*str_pathfile(const char *s1, const char *s2)
 {
-	size_t i;
-	char *dst;
+	size_t	i;
+	char	*dst;
 
 	if (!(dst = malloc(sizeof(char) * strl_pathfile(s1, s2))))
 		exit(1);

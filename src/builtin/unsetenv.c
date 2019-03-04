@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:08:04 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/03 12:20:45 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/04 13:27:41 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 static char	**new_env(int nb, int argc, char **argv, char **env)
 {
-	char **tab;
-	int i;
-	int j;
-	int k;
+	char	**tab;
+	int		i;
+	int		j;
+	int		k;
 
 	i = 0;
 	while (env[i])
@@ -42,10 +42,10 @@ static char	**new_env(int nb, int argc, char **argv, char **env)
 
 int			builtin_unsetenv(int argc, char **argv, char ***envi)
 {
-	char **env;
-	int nb;
-	int i;
-	int j;
+	char	**env;
+	int		nb;
+	int		i;
+	int		j;
 
 	env = *envi;
 	nb = 0;

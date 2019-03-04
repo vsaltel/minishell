@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 15:09:28 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/03 18:07:12 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/04 15:01:43 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,18 @@
 
 static char		**get_path_env(char *file, char **env)
 {
-	int i;
-	char *str;
-	char **tab;
-	char *tmp;
+	int		i;
+	char	*str;
+	char	**tab;
+	char	*tmp;
 
 	str = NULL;
 	i = 0;
 	while (env[i] && ft_strncmp(env[i], "PATH=", 5) != 0)
 		i++;
-	if (env[i])
-		str = env[i];
+	if (!env[i])
+		return (NULL);
+	str = env[i];
 	i = 0;
 	while (str[i] && str[i] != '=')
 		i++;
@@ -42,8 +43,8 @@ static char		**get_path_env(char *file, char **env)
 
 static char		**get_path(char *file, char **env)
 {
-	char **tab;
-	int i;
+	char	**tab;
+	int		i;
 
 	i = ft_strlen(file);
 	while (--i)
@@ -84,7 +85,8 @@ static int		execute_other(char **argv, char **env)
 	int		ret;
 	int		i;
 
-	tab = get_path(argv[0], env);
+	if (!(tab = get_path(argv[0], env)))
+		return (-1);
 	ret = 1;
 	i = -1;
 	while (ret == 1 && tab[++i])
@@ -100,14 +102,14 @@ static int		execute_other(char **argv, char **env)
 	return (ret);
 }
 
-int				execute(int	argc, char **argv, char ***env)
+int				execute(int argc, char **argv, char ***env)
 {
-	const t_builtin *list = builtin_list;	
-	int i;
+	const t_builtin	*list = g_builtin_list;
+	int				i;
 
 	i = -1;
 	while (list[++i].name)
 		if (ft_strcmp(list[i].name, argv[0]) == 0)
 			return (list[i].function(argc, argv, env));
-	return (execute_other(argv, *env));	
+	return (execute_other(argv, *env));
 }

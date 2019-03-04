@@ -6,27 +6,27 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 15:40:22 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/02/28 17:35:12 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/04 13:41:03 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTIN_H
 # define BUILTIN_H
 
-int		builtin_cd(int argc, char **argv, char ***envi);
-int		builtin_exit(int argc, char **argv, char ***envi);
-int		builtin_env(int argc, char **argv, char ***envi);
-int		builtin_echo(int argc, char **argv, char ***envi);
-int		builtin_setenv(int argc, char **argv, char ***envi);
-int		builtin_unsetenv(int argc, char **argv, char ***envi);
+int						builtin_cd(int argc, char **argv, char ***envi);
+int						builtin_exit(int argc, char **argv, char ***envi);
+int						builtin_env(int argc, char **argv, char ***envi);
+int						builtin_echo(int argc, char **argv, char ***envi);
+int						builtin_setenv(int argc, char **argv, char ***envi);
+int						builtin_unsetenv(int argc, char **argv, char ***envi);
 
-typedef struct					s_builtin
+typedef struct			s_builtin
 {
 	char	*name;
 	int		(*function)(int argc, char **argv, char ***envi);
-}								t_builtin;
+}						t_builtin;
 
-static const t_builtin	 		builtin_list[] =
+static const t_builtin	g_builtin_list[] =
 {
 	{"cd", &builtin_cd},
 	{"echo", &builtin_echo},
