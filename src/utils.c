@@ -6,11 +6,72 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 19:35:32 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/04 13:23:09 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/07 15:31:26 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char			*get_env_variable(char *cmp, int lenght, char **env)
+{
+	int i;
+
+	if (!env || !cmp)
+		return (NULL);
+	i = 0;
+	while (env[i] && (ft_strncmp(cmp, env[i], lenght) || env[i][lenght] != '='))
+		i++;
+	if (env[i])
+		return (env[i]);
+	else
+		return (NULL);
+}
+
+char			**create_env_variable(char *name, char *value, char **env)
+{
+	char    **tab;
+	char    *tmp;
+	int     i;
+
+	tab = copy_env(env, 1);
+	i = 0;
+	while (tab[i])
+		i++;
+	tab[i] = ft_strjoin(name, "=");
+	if (value)
+	{
+		tmp = tab[i];
+		tab[i] = ft_strjoin(tmp, value);
+		free(tmp);
+	}
+	tab[i + 1] = NULL;
+	return (tab);
+}
+
+char			**delete_env_variable(char *name, char **env)
+{
+	char    **tab;
+	int     i;
+	int     k;
+
+	i = 0;
+	while (env[i])
+		i++;
+	if (!(tab = malloc(sizeof(char *) * (i + 1))))
+		return (NULL);
+	i = 0;
+	k = 0;
+	while (env[i])
+	{
+		if (!(ft_strncmp(env[i], name, ft_strlen(name)) == 0 &&
+			env[i][ft_strlen(name)] == '='))
+				tab[k++] = ft_strdup(env[i]);
+		i++;
+	}
+	tab[k] = NULL;
+	free_tab(env);
+	return (tab);
+}
 
 int				true_variable(char *env, char *arg)
 {

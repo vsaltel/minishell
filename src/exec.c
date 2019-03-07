@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 15:09:28 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/04 15:01:43 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/07 15:24:44 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,24 +19,19 @@ static char		**get_path_env(char *file, char **env)
 	char	**tab;
 	char	*tmp;
 
-	str = NULL;
-	i = 0;
-	while (env[i] && ft_strncmp(env[i], "PATH=", 5) != 0)
-		i++;
-	if (!env[i])
+	if (!(str = get_env_variable("PATH", 4, env)))
 		return (NULL);
-	str = env[i];
 	i = 0;
 	while (str[i] && str[i] != '=')
 		i++;
 	i++;
 	tab = ft_strsplit(&str[i++], ':');
-	while (i >= 0)
+	i = -1;
+	while (tab[++i])
 	{
 		tmp = tab[i];
 		tab[i] = str_pathfile(tab[i], file);
 		free(tmp);
-		i--;
 	}
 	return (tab);
 }
@@ -97,9 +92,8 @@ static int		execute_other(char **argv, char **env)
 		else if (ret == 2)
 			break ;
 	}
-	error_exec(ret, "minishell", argv[0]);
 	free_tab(tab);
-	return (ret);
+	return (error_exec(ret, "minishell", argv[0], 128 - ret));
 }
 
 int				execute(int argc, char **argv, char ***env)

@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:08:04 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/04 13:27:41 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/07 12:06:55 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,15 @@ static char	**new_env(int nb, int argc, char **argv, char **env)
 	while (env[i])
 		i++;
 	if (!(tab = malloc(sizeof(char *) * (i + 1 - nb))))
-		exit(1);
+		return (NULL);
 	i = 0;
 	k = 0;
 	while (env[i])
 	{
 		j = 0;
 		while (++j < argc)
-			if (true_variable(env[i], argv[j]))
+			if (env[i] && ft_strncmp(env[i], argv[j], ft_strlen(argv[j])) == 0
+					&& env[i][ft_strlen(argv[j])] == '=')
 				break ;
 		if (j == argc)
 			tab[k++] = ft_strdup(env[i]);
@@ -55,7 +56,8 @@ int			builtin_unsetenv(int argc, char **argv, char ***envi)
 		i = -1;
 		while (env[++i])
 		{
-			if (true_variable(env[i], argv[j]))
+			if (env[i] && ft_strncmp(env[i], argv[j], ft_strlen(argv[j])) == 0
+					&& env[i][ft_strlen(argv[j])] == '=')
 				nb++;
 		}
 		j++;

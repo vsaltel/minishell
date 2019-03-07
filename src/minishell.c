@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/21 17:24:40 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/04 15:34:08 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/07 13:56:38 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,15 @@ void	set_shlvl(char ***env)
 	char	*tmp;
 	char	*tmp2;
 	int		i;
-	int		nb;
 
 	tab = *env;
-	nb = 1;
 	i = 0;
 	while (tab[i] && ft_strncmp(tab[i], "SHLVL=", 6) != 0)
 		i++;
 	if (tab[i])
 	{
-		nb += ft_atoi(&tab[i][6]);
 		tmp = tab[i];
-		tmp2 = ft_itoa(nb);
+		tmp2 = ft_itoa(ft_atoi(&tab[i][6]) + 1);
 		tab[i] = ft_strjoin("SHLVL=", tmp2);
 		free(tmp);
 		free(tmp2);
@@ -47,6 +44,8 @@ char	**copy_env(char **env, int add_variable)
 	int		i;
 
 	i = 0;
+	if (!env)
+		return (NULL);
 	while (env[i])
 		i++;
 	if (!(tab = malloc(sizeof(char *) * (i + add_variable + 1))))
@@ -61,17 +60,18 @@ char	**copy_env(char **env, int add_variable)
 	return (tab);
 }
 
-void	minishell(char **env)
+int		minishell(char **env)
 {
 	char	*buf;
 	char	*tmp;
 	char	**myenv;
 	t_lexer	lexer;
 
+	g_ret = 0;
 	lexer.tokens = NULL;
 	myenv = copy_env(env, 0);
 	set_shlvl(&myenv);
-	write(1, "$> ", 3);
+	write(1, "\033[1;32m$> \033[0m", 14);
 	while (get_next_line(0, &buf) == 1)
 	{
 		while (!fill_lexer(buf, &lexer, myenv))
@@ -87,10 +87,11 @@ void	minishell(char **env)
 		}
 		if (lexer.tokens)
 		{
-			parser(&lexer, &myenv);
+			g_ret = parser(&lexer, &myenv);
 			free_lexer(&lexer);
 		}
-		write(1, "$> ", 3);
+		!g_ret ? write(1, "\033[1;32m$> \033[0m", 14) : write(1, "\033[1;31m$> \033[0m", 14);
 	}
 	free_tab(myenv);
+	return (g_ret);
 }

@@ -6,11 +6,21 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 14:40:10 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/04 16:13:38 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/07 16:37:55 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int		is_directory(char *path, char *display)
+{
+	struct stat	fstat;
+
+	stat(path, &fstat);
+	if (!S_ISDIR(fstat.st_mode))
+		return (error_exec(6, "cd", display, 0));
+	return (1);
+}
 
 int		test_access(char *path)
 {
@@ -35,21 +45,30 @@ int		test_access(char *path)
 	return (0);
 }
 
-int		error_exec(int no, char *prog, char *display)
+int		error_exec(int no, char *prog, char *display, int ret)
 {
 	if (no == 0)
 		return (0);
 	if (prog)
 		write(2, prog, ft_strlen(prog));
 	if (no == 1)
-		write(2, ": command not found: ", 21);
+		ft_putstr_fd(": command not found: ", 2);
 	else if (no == 2)
-		write(2, ": permission denied: ", 21);
+		ft_putstr_fd(": permission denied: ", 2);
 	else if (no == 3)
-		write(2, ": Variable name must contain alphanumeric characters: ", 54);
+		ft_putstr_fd(": Variable name must contain alphanumeric characters: ", 2);
 	else if (no == 4)
-		write(2, ": no such file or directory: ", 29);
-	write(2, display, ft_strlen(display));
+		ft_putstr_fd(": no such file or directory: ", 2);
+	else if (no == 5)
+		ft_putstr_fd(": Too many arguments. ", 2);
+	else if (no == 6)
+		ft_putstr_fd(": not a directory: ", 2);
+	else if (no == 7)
+		ft_putstr_fd(": illegal option -- ", 2);
+	else if (no == 8)
+		ft_putstr_fd("Invalid argument", 2);
+	if (display)
+		write(2, display, ft_strlen(display));
 	write(2, "\n", 1);
-	return (-1);
+	return (ret);
 }

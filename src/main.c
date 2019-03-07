@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/21 17:23:39 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/02/27 18:52:11 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/06 17:30:41 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,5 @@ int		main(int argc, char **argv, char **env)
 	(void)argc;
 	(void)argv;
 	//signal(SIGINT, &sigint);
-	minishell(env);
-	return (0);
+	return (minishell(env));
 }
