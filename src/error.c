@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 14:40:10 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/07 16:37:55 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/08 17:08:21 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ int		error_exec(int no, char *prog, char *display, int ret)
 	else if (no == 2)
 		ft_putstr_fd(": permission denied: ", 2);
 	else if (no == 3)
-		ft_putstr_fd(": Variable name must contain alphanumeric characters: ", 2);
+		ft_putstr_fd(
+			": Variable name must contain alphanumeric characters: ", 2);
 	else if (no == 4)
 		ft_putstr_fd(": no such file or directory: ", 2);
 	else if (no == 5)

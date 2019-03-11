@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:08:04 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/07 12:06:55 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/08 17:04:47 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,14 @@ static char	**new_env(int nb, int argc, char **argv, char **env)
 	return (tab);
 }
 
-int			builtin_unsetenv(int argc, char **argv, char ***envi)
+int			builtin_unsetenv(int argc, char **argv, char ***envi, int lastret)
 {
 	char	**env;
 	int		nb;
 	int		i;
 	int		j;
 
+	(void)lastret;
 	env = *envi;
 	nb = 0;
 	j = 1;
@@ -55,11 +56,9 @@ int			builtin_unsetenv(int argc, char **argv, char ***envi)
 	{
 		i = -1;
 		while (env[++i])
-		{
 			if (env[i] && ft_strncmp(env[i], argv[j], ft_strlen(argv[j])) == 0
 					&& env[i][ft_strlen(argv[j])] == '=')
 				nb++;
-		}
 		j++;
 	}
 	if (nb > 0)

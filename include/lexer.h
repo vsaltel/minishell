@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 15:33:18 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/06 11:40:29 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/08 14:51:34 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ typedef struct					s_lexer
 	t_token			*tokens;
 	size_t			size;
 }								t_lexer;
-
-int								g_ret;
 
 static const t_oplist			g_existing_token[] =
 {

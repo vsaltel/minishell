@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:07:06 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/07 16:33:35 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/08 16:54:12 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ static int		cd_absolu(char **argv)
 static int		cd_other(char **argv, char **env)
 {
 	int		j;
-	char	*tmp;
 
 	j = 0;
 	if (argv[1][0] == '-' && argv[1][1] == '\0')
@@ -107,12 +106,12 @@ static int		cd_other(char **argv, char **env)
 	return (0);
 }
 
-int				builtin_cd(int argc, char **argv, char ***envi)
+int				builtin_cd(int argc, char **argv, char ***envi, int lastret)
 {
 	int		ret;
-	int		i;
 	char	**env;
 
+	(void)lastret;
 	env = *envi;
 	ret = 0;
 	if (argc < 2)

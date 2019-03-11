@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:06:41 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/07 16:16:07 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/08 16:21:10 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	have_option(char *str)
 		if (str[i] == 'i')
 			return (3);
 		else
-			error_exec(7, "env", &str[i], 0);
+			return (error_exec(7, "env", &str[i], 0));
 	}
 	return (1);
 }
@@ -49,6 +49,8 @@ char		**create_var(char *var, char **env)
 	int		i;
 	char	**tab;
 
+	if (!var)
+		return (NULL);
 	tab = copy_env(env, 1);
 	i = 0;
 	while (tab[i])
@@ -86,7 +88,7 @@ int			set_tmp_var(int *i, int argc, char **argv, char ***env)
 	return (0);
 }
 
-int			builtin_env(int argc, char **argv, char ***envi)
+int			builtin_env(int argc, char **argv, char ***envi, int lastret)
 {
 	char	**env;
 	int		i;
@@ -103,7 +105,17 @@ int			builtin_env(int argc, char **argv, char ***envi)
 			return (ret);
 		}
 	if (i < argc)
-		ret = execute(argc - i, &argv[i], &env);
+	{
+		if (!get_env_variable("PATH", 4, env))
+		{
+			argv[i] = get_string_path(&ret, &argv[i], *envi);
+			ft_printf("la %s\n", argv[i]);
+			ret = execute(argc - i, &argv[i], &env, lastret);
+			free(argv[i]);
+		}
+		else
+			ret = execute(argc - i, &argv[i], &env, lastret);
+	}
 	else
 		display_env(env, &ret);
 	free_tab(env);

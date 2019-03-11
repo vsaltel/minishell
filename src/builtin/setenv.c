@@ -6,11 +6,23 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:08:41 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/07 15:27:54 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/08 17:02:00 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int		true_variable(char *env, char *arg)
+{
+	int j;
+
+	j = 0;
+	while (arg[j])
+		j++;
+	if (ft_strncmp(env, arg, ft_strlen(arg)) == 0 && env[j] == '=')
+		return (1);
+	return (0);
+}
 
 static int		existing_variable(int argc, char **argv, char **env)
 {
@@ -58,15 +70,14 @@ char			**create_variable(int argc, char **argv, char ***env)
 	return (&tab[i]);
 }
 
-int				builtin_setenv(int argc, char **argv, char ***envi)
+int				builtin_setenv(int argc, char **argv, char ***envi, int lastret)
 {
 	int		i;
-	char	*tmp;
 	char	**env;
 
 	env = *envi;
 	if (argc < 2)
-		return (builtin_env(argc, argv, envi));
+		return (builtin_env(argc, argv, envi, lastret));
 	if (argc > 3)
 		return (error_exec(5, "setenv", NULL, 0));
 	i = -1;

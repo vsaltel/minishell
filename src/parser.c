@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 16:15:36 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/05 19:25:51 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/08 14:48:55 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	set_arg(t_lexer *lexer, int *argc, char ***argv)
 	*argv = av;
 }
 
-int		parser(t_lexer *lexer, char ***env)
+int		parser(t_lexer *lexer, char ***env, int lastret)
 {
 	t_token	*begin;
 	int		ret;
@@ -53,7 +53,7 @@ int		parser(t_lexer *lexer, char ***env)
 		if (lexer->tokens->type == TOKEN_NAME)
 		{
 			set_arg(lexer, &argc, &argv);
-			ret = execute(argc, argv, env);
+			ret = execute(argc, argv, env, lastret);
 			lexer->size -= argc;
 			free(argv);
 		}

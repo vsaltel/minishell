@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 19:35:32 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/07 15:31:26 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/08 17:01:32 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ char			*get_env_variable(char *cmp, int lenght, char **env)
 
 char			**create_env_variable(char *name, char *value, char **env)
 {
-	char    **tab;
-	char    *tmp;
-	int     i;
+	char	**tab;
+	char	*tmp;
+	int		i;
 
 	tab = copy_env(env, 1);
 	i = 0;
@@ -50,9 +50,9 @@ char			**create_env_variable(char *name, char *value, char **env)
 
 char			**delete_env_variable(char *name, char **env)
 {
-	char    **tab;
-	int     i;
-	int     k;
+	char	**tab;
+	int		i;
+	int		k;
 
 	i = 0;
 	while (env[i])
@@ -65,24 +65,12 @@ char			**delete_env_variable(char *name, char **env)
 	{
 		if (!(ft_strncmp(env[i], name, ft_strlen(name)) == 0 &&
 			env[i][ft_strlen(name)] == '='))
-				tab[k++] = ft_strdup(env[i]);
+			tab[k++] = ft_strdup(env[i]);
 		i++;
 	}
 	tab[k] = NULL;
 	free_tab(env);
 	return (tab);
-}
-
-int				true_variable(char *env, char *arg)
-{
-	int j;
-
-	j = 0;
-	while (arg[j])
-		j++;
-	if (ft_strncmp(env, arg, ft_strlen(arg)) == 0 && env[j] == '=')
-		return (1);
-	return (0);
 }
 
 static size_t	strl_pathfile(const char *s1, const char *s2)

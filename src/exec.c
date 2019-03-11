@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 15:09:28 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/07 15:24:44 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/08 17:06:12 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char		**get_path_env(char *file, char **env)
 	return (tab);
 }
 
-static char		**get_path(char *file, char **env)
+static char		**get_tab_path(char *file, char **env)
 {
 	char	**tab;
 	int		i;
@@ -59,6 +59,35 @@ static char		**get_path(char *file, char **env)
 	}
 }
 
+char			*get_string_path(int *ret, char **argv, char **env)
+{
+	char	**tab;
+	char	*str;
+	int		i;
+
+	if (!(tab = get_tab_path(argv[0], env)))
+	{
+		*ret = error_exec(1, "minishell", argv[0], 127);
+		return (NULL);
+	}
+	*ret = 1;
+	i = -1;
+	while (*ret == 1 && tab[++i])
+	{
+		*ret = test_access(tab[i]);
+		if (!(*ret))
+		{
+			str = ft_strdup(tab[i]);
+			free_tab(tab);
+			return (str);
+		}
+		else if (*ret == 2)
+			break ;
+	}
+	free_tab(tab);
+	return (NULL);
+}
+
 static int		new_process(char *str, char **argv, char **env)
 {
 	int		pid;
@@ -74,36 +103,24 @@ static int		new_process(char *str, char **argv, char **env)
 	return (ret);
 }
 
-static int		execute_other(char **argv, char **env)
-{
-	char	**tab;
-	int		ret;
-	int		i;
-
-	if (!(tab = get_path(argv[0], env)))
-		return (-1);
-	ret = 1;
-	i = -1;
-	while (ret == 1 && tab[++i])
-	{
-		ret = test_access(tab[i]);
-		if (!ret)
-			return (new_process(tab[i], argv, env));
-		else if (ret == 2)
-			break ;
-	}
-	free_tab(tab);
-	return (error_exec(ret, "minishell", argv[0], 128 - ret));
-}
-
-int				execute(int argc, char **argv, char ***env)
+int				execute(int argc, char **argv, char ***env, int lastret)
 {
 	const t_builtin	*list = g_builtin_list;
 	int				i;
+	int				ret;
+	char			*str;
 
 	i = -1;
 	while (list[++i].name)
 		if (ft_strcmp(list[i].name, argv[0]) == 0)
-			return (list[i].function(argc, argv, env));
-	return (execute_other(argv, *env));
+			return (list[i].function(argc, argv, env, lastret));
+	ret = 0;
+	if ((str = get_string_path(&ret, argv, *env)))
+	{
+		ret = new_process(str, argv, *env);
+		free(str);
+	}
+	else
+		return (error_exec(ret, "minishell", argv[0], 128 - ret));
+	return (ret);
 }

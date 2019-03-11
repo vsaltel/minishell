@@ -6,13 +6,13 @@
 #    By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/21 17:21:50 by vsaltel           #+#    #+#              #
-#    Updated: 2019/03/03 17:23:26 by vsaltel          ###   ########.fr        #
+#    Updated: 2019/03/11 12:11:35 by vsaltel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC		=	gcc
-#CFLAGS	+=	-Wall -Werror -Wextra
-CFLAGS = -g -fsanitize=address
+CFLAGS	+=	-Wall -Werror -Wextra
+#CFLAGS = -g -fsanitize=address
 
 NAME 	=	minishell
 LIBFT	=	libft
@@ -23,6 +23,7 @@ FILES 	=	minishell.c			\
 			lexer.c				\
 			lexer2.c			\
 			parser.c			\
+			regex.c				\
 			free.c				\
 			utils.c				\
 			error.c				\
