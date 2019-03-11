@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/21 17:23:39 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/11 13:37:48 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/11 15:49:51 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,10 @@ void	set_shlvl(char ***env)
 int		main(int argc, char **argv, char **env)
 {
 	char	**myenv;
-	t_shell shell;
 
 	(void)argc;
 	(void)argv;
 	myenv = copy_env(env, 0);
 	set_shlvl(&myenv);
-	return (minishell(myenv, shell));
+	return (minishell(myenv));
 }

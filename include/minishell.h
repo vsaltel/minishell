@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/21 16:43:02 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/11 13:39:11 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/11 15:49:32 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <signal.h>
 
 
-int						minishell(char **env, t_shell shell);
+int						minishell(char **env);
 int						parser(t_lexer *lexer, char ***env, int lastret);
 int						fill_lexer(char *s, t_lexer *lexer, char **env);
 void					free_lexer(t_lexer *lexer);

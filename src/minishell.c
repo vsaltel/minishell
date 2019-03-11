@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/21 17:24:40 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/11 13:40:03 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/11 15:50:23 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,14 @@ char	**copy_env(char **env, int add_variable)
 	return (tab);
 }
 
-int		minishell(char **env, t_shell shell)
+int		minishell(char **env)
 {
 	char	*buf;
 	char	*tmp;
 	t_lexer	lexer;
 	int		lastret;
 
-	shell.lastret = 0;
+	lastret = 0;
 	lexer.tokens = NULL;
 	write(1, "\033[1;32m$> \033[0m", 14);
 	while (get_next_line(0, &buf) == 1)
