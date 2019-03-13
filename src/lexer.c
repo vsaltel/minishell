@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 12:53:52 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/11 12:16:06 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/12 14:23:53 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ static t_oplist	searchtokentype(char *s)
 }
 
 static void		addtolexer(t_lexer *lexer, t_token *item,
-		char **env)
+		char **env, int lastret)
 {
 	t_token *current;
 	char	*tmp;
 
-	set_token_env(item, env);
+	set_token_env(item, env, lastret);
 	tmp = ft_strdup(item->content);
 	sstrncpy(item->content, tmp, ft_strlen(tmp));
 	item->size = ft_strlen(item->content);
@@ -73,37 +73,48 @@ static int		quote(t_lexer *lexer, const char **prev, char **s, char **env)
 	if (*s1 == '\0')
 		return (0);
 	addtolexer(lexer, create_token(prev1 + 1, s1 - prev1 - 1, TOKEN_NAME),
-			env);
+			env, 0);
 	prev1 = ++s1;
 	*prev = prev1;
 	*s = s1;
 	return (1);
 }
 
-static int		add_current(char **s, const char **prev, t_lexer *l, char **env)
+static int		add_current(t_shell *shell, char **s, const char **prev,
+		const char *begin)
 {
 	t_oplist	c;
 
 	c = searchtokentype(*s);
 	if ((c.op != 0 || **s == '"' || **s == '\'') && *prev != *s)
-		addtolexer(l, create_token(*prev, *s - *prev, TOKEN_NAME), env);
+		addtolexer((&shell->lexer),
+			create_token(*prev, *s - *prev, TOKEN_NAME),
+				shell->env, shell->lastret);
 	if (c.op != 0)
 	{
 		*s += c.size;
 		if (c.type != TOKEN_EAT)
-			addtolexer(l, create_token(c.op, c.size, c.type), env);
+			addtolexer((&shell->lexer),
+				create_token(c.op, c.size, c.type), shell->env, shell->lastret);
 		*prev = *s;
-		return (1);
 	}
-	return (0);
+	else if ((begin == *s || *(*(s) - 1) != '\\') &&
+			(**s == '"' || **s == '\''))
+	{
+		if (!quote((&shell->lexer), prev, s, shell->env))
+			return (0);
+	}
+	else
+		(*s)++;
+	return (1);
 }
 
-int				fill_lexer(char *s, t_lexer *l, char **env)
+int				fill_lexer(char *s, t_shell *shell)
 {
 	const char	*prev;
 	const char	*begin;
 
-	l->size = 0;
+	shell->lexer.size = 0;
 	prev = s;
 	begin = s;
 	while (s && *s)
@@ -112,17 +123,13 @@ int				fill_lexer(char *s, t_lexer *l, char **env)
 			s++;
 		else
 		{
-			if (!add_current(&s, &prev, l, env) &&
-				(begin == s || *(s - 1) != '\\') && (*s == '"' || *s == '\''))
-			{
-				if (!quote(l, &prev, &s, env))
-					return (0);
-			}
-			else
-				s++;
+			if (!add_current(shell, &s, &prev, begin))
+				return (0);
 		}
 	}
 	if (prev != s)
-		addtolexer(l, create_token(prev, s - prev, TOKEN_NAME), env);
+		addtolexer(&(shell->lexer),
+			create_token(prev, s - prev, TOKEN_NAME),
+				shell->env, shell->lastret);
 	return (1);
 }

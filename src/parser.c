@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 16:15:36 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/08 14:48:55 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/11 17:48:50 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	set_arg(t_lexer *lexer, int *argc, char ***argv)
 	*argv = av;
 }
 
-int		parser(t_lexer *lexer, char ***env, int lastret)
+int		parser(t_shell *shell)
 {
 	t_token	*begin;
 	int		ret;
@@ -47,22 +47,22 @@ int		parser(t_lexer *lexer, char ***env, int lastret)
 	char	**argv;
 
 	ret = 0;
-	begin = lexer->tokens;
-	while (lexer->size > 0)
+	begin = shell->lexer.tokens;
+	while (shell->lexer.size > 0)
 	{
-		if (lexer->tokens->type == TOKEN_NAME)
+		if (shell->lexer.tokens->type == TOKEN_NAME)
 		{
-			set_arg(lexer, &argc, &argv);
-			ret = execute(argc, argv, env, lastret);
-			lexer->size -= argc;
+			set_arg(&(shell->lexer), &argc, &argv);
+			ret = execute(shell, argc, argv);
+			shell->lexer.size -= argc;
 			free(argv);
 		}
 		else
 		{
-			lexer->tokens = lexer->tokens->next;
-			lexer->size--;
+			shell->lexer.tokens = shell->lexer.tokens->next;
+			shell->lexer.size--;
 		}
 	}
-	lexer->tokens = begin;
+	shell->lexer.tokens = begin;
 	return (ret);
 }

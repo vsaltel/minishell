@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:08:04 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/08 17:04:47 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/12 14:08:04 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,30 +41,30 @@ static char	**new_env(int nb, int argc, char **argv, char **env)
 	return (tab);
 }
 
-int			builtin_unsetenv(int argc, char **argv, char ***envi, int lastret)
+int			builtin_unsetenv(t_shell *shell, int argc, char **argv)
 {
-	char	**env;
+	char	**tmp;
 	int		nb;
 	int		i;
 	int		j;
 
-	(void)lastret;
-	env = *envi;
 	nb = 0;
 	j = 1;
 	while (j < argc)
 	{
 		i = -1;
-		while (env[++i])
-			if (env[i] && ft_strncmp(env[i], argv[j], ft_strlen(argv[j])) == 0
-					&& env[i][ft_strlen(argv[j])] == '=')
+		while (shell->env[++i])
+			if (shell->env[i] &&
+				ft_strncmp(shell->env[i], argv[j], ft_strlen(argv[j])) == 0 &&
+					shell->env[i][ft_strlen(argv[j])] == '=')
 				nb++;
 		j++;
 	}
 	if (nb > 0)
 	{
-		*envi = new_env(nb, argc, argv, env);
-		free(env);
+		tmp = shell->env;
+		shell->env = new_env(nb, argc, argv, shell->env);
+		free_tab(tmp);
 	}
 	return (0);
 }

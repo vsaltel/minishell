@@ -6,25 +6,32 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 15:40:22 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/08 14:44:43 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/11 16:42:12 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTIN_H
 # define BUILTIN_H
 
-int						builtin_cd(int argc, char **argv, char ***envi, int lastret);
-int						builtin_exit(int argc, char **argv, char ***envi, int lastret);
-int						builtin_env(int argc, char **argv, char ***envi, int lastret);
-int						builtin_echo(int argc, char **argv, char ***envi, int lastret);
-int						builtin_setenv(int argc, char **argv, char ***envi, int lastret);
-int						builtin_unsetenv(int argc, char **argv, char ***envi, int lastret);
+typedef struct				s_shell
+{
+	char	**env;	
+	t_lexer	lexer;
+	int		lastret;
+}							t_shell;
 
 typedef struct			s_builtin
 {
 	char	*name;
-	int		(*function)(int argc, char **argv, char ***envi, int lastret);
+	int		(*function)(t_shell *shell, int argc, char **argv);
 }						t_builtin;
+
+int						builtin_cd(t_shell *shell, int argc, char **argv);
+int						builtin_exit(t_shell *shell, int argc, char **arg);
+int						builtin_env(t_shell *shell, int argc, char **argv);
+int						builtin_echo(t_shell *shell, int argc, char **argv);
+int						builtin_setenv(t_shell *shell, int argc, char **argv);
+int						builtin_unsetenv(t_shell *shell, int argc, char **argv);
 
 static const t_builtin	g_builtin_list[] =
 {

@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:06:05 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/08 16:55:58 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/12 17:25:23 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,23 +25,20 @@ int		have_option(char *str, char c)
 	return (0);
 }
 
-int		builtin_echo(int argc, char **argv, char ***envi, int lastret)
+int		builtin_echo(t_shell *shell, int argc, char **argv)
 {
 	int i;
 
-	(void)envi;
-	(void)lastret;
+	(void)shell;
 	if (argv && argc > 1)
 	{
 		i = 1;
-		if (argv[i][0] == '-')
-			i++;
-		while (argv[i] && argv[i][0] == '\0')
+		if (argv[i][0] == '-' && argv[i][1] == 'n')
 			i++;
 		if (argv[i])
-			ft_printf("%s", argv[i]);
-		while (argv[++i])
-			ft_printf(" %s", argv[i]);
+			ft_printf("%s", argv[i++]);
+		while (argv[i])
+			ft_printf(" %s", argv[i++]);
 	}
 	if (!have_option(argv[1], 'n'))
 		ft_putchar('\n');

@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:06:41 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/08 16:21:10 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/12 14:08:19 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,36 +88,42 @@ int			set_tmp_var(int *i, int argc, char **argv, char ***env)
 	return (0);
 }
 
-int			builtin_env(int argc, char **argv, char ***envi, int lastret)
+int			builtin_env(t_shell *shell, int argc, char **argv)
 {
-	char	**env;
+	t_shell	new;
 	int		i;
 	int		ret;
+	char	*tmp;
 
-	env = copy_env(*envi, 0);
-	if (!(env && *env))
+	new.env = copy_env(shell->env, 0);
+	new.lastret = shell->lastret;
+	if (!(new.env && *(new.env)))
 		return (-1);
 	i = 1;
 	if (i < argc)
-		if ((ret = set_tmp_var(&i, argc, argv, &env)))
+		if ((ret = set_tmp_var(&i, argc, argv, &(new.env))))
 		{
-			free_tab(env);
+			free_tab(new.env);
 			return (ret);
 		}
 	if (i < argc)
 	{
-		if (!get_env_variable("PATH", 4, env))
+		if (!get_env_variable("PATH", 4, new.env))
 		{
-			argv[i] = get_string_path(&ret, &argv[i], *envi);
-			ft_printf("la %s\n", argv[i]);
-			ret = execute(argc - i, &argv[i], &env, lastret);
-			free(argv[i]);
+			tmp = argv[i];
+			if (!(argv[i] = get_string_path(&ret, &argv[i], shell->env)))
+			{
+				argv[i] = tmp;
+				return (error_exec(4, "env", argv[i], 127));
+			}
+			ret = execute(&new, argc - i, &argv[i]);
+			free(tmp);
 		}
 		else
-			ret = execute(argc - i, &argv[i], &env, lastret);
+			ret = execute(&new, argc - i, &argv[i]);
 	}
 	else
-		display_env(env, &ret);
-	free_tab(env);
+		display_env(new.env, &ret);
+	free_tab(new.env);
 	return (ret);
 }

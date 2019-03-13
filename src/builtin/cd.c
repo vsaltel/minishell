@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:07:06 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/08 16:54:12 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/12 14:08:39 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,19 +106,16 @@ static int		cd_other(char **argv, char **env)
 	return (0);
 }
 
-int				builtin_cd(int argc, char **argv, char ***envi, int lastret)
+int				builtin_cd(t_shell *shell, int argc, char **argv)
 {
 	int		ret;
-	char	**env;
 
-	(void)lastret;
-	env = *envi;
 	ret = 0;
 	if (argc < 2)
-		chdir(get_env_variable("HOME", 4, env) + 5);
+		chdir(get_env_variable("HOME", 4, shell->env) + 5);
 	else
-		ret = cd_other(argv, env);
-	change_oldpwd(envi);
-	change_pwd(envi);
+		ret = cd_other(argv, shell->env);
+	change_oldpwd(&(shell->env));
+	change_pwd(&(shell->env));
 	return (ret);
 }

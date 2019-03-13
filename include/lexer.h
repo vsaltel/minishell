@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 15:33:18 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/08 14:51:34 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/11 17:23:36 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 typedef enum					e_token_type
 {
 	TOKEN_SEMI,
-	TOKEN_EAT,
 	TOKEN_NAME,
+	TOKEN_EAT,
 	TOKEN_NULL
 }								t_token_type;
 

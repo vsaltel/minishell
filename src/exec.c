@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 15:09:28 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/08 17:06:12 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/12 15:18:24 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ static char		**get_tab_path(char *file, char **env)
 	char	**tab;
 	int		i;
 
-	i = ft_strlen(file);
+	if (!(i = ft_strlen(file)))
+		return (NULL);
 	while (--i)
 	{
 		if (file[i] == '/')
@@ -103,7 +104,7 @@ static int		new_process(char *str, char **argv, char **env)
 	return (ret);
 }
 
-int				execute(int argc, char **argv, char ***env, int lastret)
+int				execute(t_shell *shell, int argc, char **argv)
 {
 	const t_builtin	*list = g_builtin_list;
 	int				i;
@@ -113,11 +114,11 @@ int				execute(int argc, char **argv, char ***env, int lastret)
 	i = -1;
 	while (list[++i].name)
 		if (ft_strcmp(list[i].name, argv[0]) == 0)
-			return (list[i].function(argc, argv, env, lastret));
+			return (list[i].function(shell, argc, argv));
 	ret = 0;
-	if ((str = get_string_path(&ret, argv, *env)))
+	if ((str = get_string_path(&ret, argv, shell->env)))
 	{
-		ret = new_process(str, argv, *env);
+		ret = new_process(str, argv, shell->env);
 		free(str);
 	}
 	else

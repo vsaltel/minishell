@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:08:41 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/08 17:02:00 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/12 14:07:06 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,21 +70,19 @@ char			**create_variable(int argc, char **argv, char ***env)
 	return (&tab[i]);
 }
 
-int				builtin_setenv(int argc, char **argv, char ***envi, int lastret)
+int				builtin_setenv(t_shell *shell, int argc, char **argv)
 {
 	int		i;
-	char	**env;
 
-	env = *envi;
 	if (argc < 2)
-		return (builtin_env(argc, argv, envi, lastret));
+		return (builtin_env(shell, argc, argv));
 	if (argc > 3)
 		return (error_exec(5, "setenv", NULL, 0));
 	i = -1;
 	while (argv[1][++i])
 		if (!ft_isalnum(argv[1][i]))
 			return (error_exec(3, "setenv", NULL, -1));
-	if (!existing_variable(argc, argv, env))
-		create_variable(argc, argv, envi);
+	if (!existing_variable(argc, argv, shell->env))
+		create_variable(argc, argv, &(shell->env));
 	return (0);
 }
