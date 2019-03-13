@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/21 16:43:02 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/13 15:00:13 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/13 18:10:33 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,18 @@ void					set_token_env(t_token *token, char **env, int lastret);
 char					**create_variable(int argc, char **argv, char ***env);
 char					*get_env_variable(char *cmp, int lenght, char **env);
 int						is_directory(char *path, char *display);
-char					**create_env_variable(char *name, char *value, char **env);
+char					**create_env_variable(char *name, char *value,
+		char **env);
 char					**delete_env_variable(char *name, char **env);
 int						error_exec(int no, char *prog, char *display, int ret);
 char					*get_string_path(int *ret, char **argv, char **env);
 t_token					*create_token(const char *text, size_t text_size,
 							t_token_type type);
 char					*sstrncpy(char *dst, const char *src, size_t len);
-char					*ft_strfjoin(char const *s1, char const *s2);
+char					*sstrchr(const char *s, int c);
+char					*ft_strfjoin(char const *s1, char const *s2,
+		char const *f);
+void					display_env(char **env, int *ret);
+int						is_dir(char *str);
 
 #endif

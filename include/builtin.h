@@ -6,19 +6,19 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 15:40:22 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/11 16:42:12 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/13 18:10:09 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTIN_H
 # define BUILTIN_H
 
-typedef struct				s_shell
+typedef struct			s_shell
 {
-	char	**env;	
+	char	**env;
 	t_lexer	lexer;
 	int		lastret;
-}							t_shell;
+}						t_shell;
 
 typedef struct			s_builtin
 {

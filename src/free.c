@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 13:29:45 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/05 16:40:50 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/13 17:29:19 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	free_lexer(t_lexer *lexer)
 	while (lexer->tokens)
 	{
 		tmp = lexer->tokens->next;
+		free(lexer->tokens->content);
 		free(lexer->tokens);
 		lexer->tokens = tmp;
 	}

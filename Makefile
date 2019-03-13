@@ -6,13 +6,13 @@
 #    By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/21 17:21:50 by vsaltel           #+#    #+#              #
-#    Updated: 2019/03/11 16:42:17 by vsaltel          ###   ########.fr        #
+#    Updated: 2019/03/13 17:19:27 by vsaltel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC		=	gcc
 #CFLAGS	+=	-Wall -Werror -Wextra
-CFLAGS = -g -fsanitize=address
+#CFLAGS = -g -fsanitize=address
 
 NAME 	=	minishell
 LIBFT	=	libft
@@ -26,6 +26,7 @@ FILES 	=	minishell.c			\
 			regex.c				\
 			free.c				\
 			utils.c				\
+			utils2.c			\
 			error.c				\
 			exec.c				\
 			builtin/cd.c		\

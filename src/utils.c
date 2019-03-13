@@ -6,23 +6,11 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 19:35:32 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/13 14:44:05 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/13 16:47:30 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
-char    *ft_strfjoin(char const *s1, char const *s2)
-{
-	char	*dst;
-
-	if (!s1 || !s2 || !(dst = ft_strnew(ft_strlen(s1) + ft_strlen(s2))))
-		return (NULL);
-	ft_strcpy(dst, s1);
-	free((char *)s1);
-	return (ft_strcat(dst, s2));
-}
 
 char			*get_env_variable(char *cmp, int lenght, char **env)
 {

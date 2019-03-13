@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 15:09:28 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/12 15:18:24 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/13 18:07:17 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,8 @@ int				execute(t_shell *shell, int argc, char **argv)
 	ret = 0;
 	if ((str = get_string_path(&ret, argv, shell->env)))
 	{
-		ret = new_process(str, argv, shell->env);
+		if (!is_dir(str))
+			ret = new_process(str, argv, shell->env);
 		free(str);
 	}
 	else

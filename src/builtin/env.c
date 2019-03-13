@@ -6,26 +6,11 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:06:41 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/12 14:08:19 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/13 18:53:13 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	display_env(char **env, int *ret)
-{
-	int i;
-
-	i = 0;
-	if (env[i])
-	{
-		ft_putstr(env[i]);
-		while (env[++i])
-			ft_printf("\n%s", env[i]);
-		ft_putchar('\n');
-	}
-	*ret = 0;
-}
 
 static int	have_option(char *str)
 {
@@ -84,8 +69,33 @@ int			set_tmp_var(int *i, int argc, char **argv, char ***env)
 		if (argv[(*i)++][0] != '=')
 			*env = create_var(argv[(*i) - 1], *env);
 		else
-			return (error_exec(8, "env: setenv: ", "=", 1));
+			return (error_exec(8, "env: ", "=", 1));
 	return (0);
+}
+
+int			env_exec(t_shell *shell, t_shell *new, char **argv, int i)
+{
+	char	*tmp;
+	int		ret;
+	int		newargc;
+
+	newargc = 0;
+	while (argv[i + newargc])
+		newargc++;
+	ret = 0;
+	if (!get_env_variable("PATH", 4, new->env))
+	{
+		tmp = argv[i];
+		if (!(argv[i] = get_string_path(&ret, &argv[i], shell->env)))
+			ret = error_exec(4, "env", tmp, 127);
+		else
+			ret = execute(new, newargc - i, &argv[i]);
+		free(argv[i]);
+		argv[i] = tmp;
+	}
+	else
+		ret = execute(new, newargc - i, &argv[i]);
+	return (ret);
 }
 
 int			builtin_env(t_shell *shell, int argc, char **argv)
@@ -93,7 +103,6 @@ int			builtin_env(t_shell *shell, int argc, char **argv)
 	t_shell	new;
 	int		i;
 	int		ret;
-	char	*tmp;
 
 	new.env = copy_env(shell->env, 0);
 	new.lastret = shell->lastret;
@@ -107,21 +116,7 @@ int			builtin_env(t_shell *shell, int argc, char **argv)
 			return (ret);
 		}
 	if (i < argc)
-	{
-		if (!get_env_variable("PATH", 4, new.env))
-		{
-			tmp = argv[i];
-			if (!(argv[i] = get_string_path(&ret, &argv[i], shell->env)))
-			{
-				argv[i] = tmp;
-				return (error_exec(4, "env", argv[i], 127));
-			}
-			ret = execute(&new, argc - i, &argv[i]);
-			free(tmp);
-		}
-		else
-			ret = execute(&new, argc - i, &argv[i]);
-	}
+		ret = env_exec(shell, &new, argv, i);
 	else
 		display_env(new.env, &ret);
 	free_tab(new.env);
