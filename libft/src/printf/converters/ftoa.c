@@ -6,7 +6,7 @@
 /*   By: frossiny <frossiny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/04 17:06:42 by frossiny          #+#    #+#             */
-/*   Updated: 2019/02/13 14:36:41 by frossiny         ###   ########.fr       */
+/*   Updated: 2019/03/18 15:13:27 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ size_t			malloc_str(t_arg *arg, size_t *i, char *buf, int neg)
 
 	len = (size_t)arg->width > *i ? arg->width : *i;
 	if (len == *i)
-		len += (arg->positive || arg->space || neg) +
-								(arg->prefix && arg->precision == 0);
+		len += (arg->positive || arg->space || neg)
+			+ (arg->prefix && arg->precision == 0);
 	if (!(arg->str = (char *)malloc(sizeof(char) * (len + 1))))
 	{
 		arg->str = ft_strdup("");

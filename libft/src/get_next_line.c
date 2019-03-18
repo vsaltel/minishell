@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/19 11:30:57 by vsaltel           #+#    #+#             */
-/*   Updated: 2018/11/26 14:32:12 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/14 18:00:47 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ static	char	*cutting(char **rest)
 		tmp = *rest;
 		ret = ft_strcdup(*rest, '\n');
 		*rest = ft_strchr(*rest, '\n') + 1;
-		*rest = ft_strdup(*rest);
+		if (ft_strlen(*rest) > 0)
+			*rest = ft_strdup(*rest);
+		else
+			*rest = NULL;
 		free(tmp);
 	}
 	else

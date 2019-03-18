@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 12:07:06 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/12 14:08:39 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/18 14:40:12 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,19 @@ static int		cd_absolu(char **argv)
 {
 	char	*tmp;
 	char	*tmp2;
+	int		ret;
 
 	tmp = getcwd(NULL, 0);
 	tmp2 = str_pathfile(tmp, argv[1]);
-	if (!is_directory(tmp2, argv[1]))
+	ret = is_directory(tmp2, argv[1]);
+	if (!ret)
+	{
+		free(tmp);
+		free(tmp2);
 		return (1);
-	free(tmp);
+	}
 	chdir(tmp2);
+	free(tmp);
 	free(tmp2);
 	return (0);
 }

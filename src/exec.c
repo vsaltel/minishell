@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 15:09:28 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/13 18:07:17 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/14 18:48:16 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,9 @@ char			*get_string_path(int *ret, char **argv, char **env)
 	char	*str;
 	int		i;
 
-	if (!(tab = get_tab_path(argv[0], env)))
-	{
-		*ret = error_exec(1, "minishell", argv[0], 127);
-		return (NULL);
-	}
 	*ret = 1;
+	if (!(tab = get_tab_path(argv[0], env)))
+		return (NULL);
 	i = -1;
 	while (*ret == 1 && tab[++i])
 	{
@@ -91,16 +88,16 @@ char			*get_string_path(int *ret, char **argv, char **env)
 
 static int		new_process(char *str, char **argv, char **env)
 {
-	int		pid;
 	int		ret;
 
 	ret = -1;
-	if ((pid = fork()) < 0)
+	if ((g_pid = fork()) < 0)
 		return (-1);
-	if (!pid)
+	if (!g_pid)
 		execve(str, argv, env);
 	else
-		waitpid(pid, &ret, 0);
+		waitpid(g_pid, &ret, 0);
+	g_pid = 0;
 	return (ret);
 }
 
@@ -118,7 +115,7 @@ int				execute(t_shell *shell, int argc, char **argv)
 	ret = 0;
 	if ((str = get_string_path(&ret, argv, shell->env)))
 	{
-		if (!is_dir(str))
+		if (!is_dir(&ret, str, argv[0]))
 			ret = new_process(str, argv, shell->env);
 		free(str);
 	}

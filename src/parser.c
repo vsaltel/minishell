@@ -6,63 +6,61 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 16:15:36 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/11 17:48:50 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/18 14:31:49 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	set_arg(t_lexer *lexer, int *argc, char ***argv)
+static void	set_arg(t_token *current, int *argc, char ***argv)
 {
 	t_token	*begin;
 	int		ac;
 	char	**av;
 
-	begin = lexer->tokens;
+	begin = current;
 	ac = 0;
-	while (lexer->tokens && lexer->tokens->type == TOKEN_NAME)
+	while (current && current->type == TOKEN_NAME)
 	{
 		ac++;
-		lexer->tokens = lexer->tokens->next;
+		current = current->next;
 	}
 	if (!(av = malloc(sizeof(char *) * (ac + 1))))
 		exit(1);
 	ac = 0;
-	lexer->tokens = begin;
-	while (lexer->tokens && lexer->tokens->type == TOKEN_NAME)
+	current = begin;
+	while (current && current->type == TOKEN_NAME)
 	{
-		av[ac++] = lexer->tokens->content;
-		lexer->tokens = lexer->tokens->next;
+		av[ac++] = ft_strdup(current->content);
+		current = current->next;
 	}
+	current = begin;
 	av[ac] = NULL;
 	*argc = ac;
 	*argv = av;
 }
 
-int		parser(t_shell *shell)
+int			parser(t_shell *shell)
 {
-	t_token	*begin;
+	t_token	*current;
 	int		ret;
 	int		argc;
 	char	**argv;
 
 	ret = 0;
-	begin = shell->lexer.tokens;
-	while (shell->lexer.size > 0)
+	current = shell->lexer.tokens;
+	while (current)
 	{
-		if (shell->lexer.tokens->type == TOKEN_NAME)
+		if (current->type == TOKEN_NAME)
 		{
-			set_arg(&(shell->lexer), &argc, &argv);
+			set_arg(current, &argc, &argv);
 			ret = execute(shell, argc, argv);
-			shell->lexer.size -= argc;
-			free(argv);
+			free_tab(argv);
+			while (--argc > -1)
+				current = current->next;
 		}
 		else
-		{
-			shell->lexer.tokens = shell->lexer.tokens->next;
-			shell->lexer.size--;
-		}
+			current = current->next;
 	}
-	shell->lexer.tokens = begin;
 	return (ret);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input_split.c                                      :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/22 12:53:52 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/12 14:23:53 by vsaltel          ###   ########.fr       */
+/*   Created: 2019/03/18 10:45:16 by vsaltel           #+#    #+#             */
+/*   Updated: 2019/03/18 15:07:16 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ static void		addtolexer(t_lexer *lexer, t_token *item,
 	t_token *current;
 	char	*tmp;
 
-	set_token_env(item, env, lastret);
+	tilde_exception(item, env);
+	if (ft_strlen(item->content + 1) > 0)
+		dollar_exceptions(&(item->content), env, lastret);
 	tmp = ft_strdup(item->content);
 	sstrncpy(item->content, tmp, ft_strlen(tmp));
 	item->size = ft_strlen(item->content);
@@ -98,8 +100,8 @@ static int		add_current(t_shell *shell, char **s, const char **prev,
 				create_token(c.op, c.size, c.type), shell->env, shell->lastret);
 		*prev = *s;
 	}
-	else if ((begin == *s || *(*(s) - 1) != '\\') &&
-			(**s == '"' || **s == '\''))
+	else if ((begin == *s || *(*(s) - 1) != '\\')
+			&& (**s == '"' || **s == '\''))
 	{
 		if (!quote((&shell->lexer), prev, s, shell->env))
 			return (0);

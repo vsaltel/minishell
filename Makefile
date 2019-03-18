@@ -6,12 +6,12 @@
 #    By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/21 17:21:50 by vsaltel           #+#    #+#              #
-#    Updated: 2019/03/13 17:19:27 by vsaltel          ###   ########.fr        #
+#    Updated: 2019/03/18 14:10:31 by vsaltel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC		=	gcc
-#CFLAGS	+=	-Wall -Werror -Wextra
+CFLAGS	+=	-Wall -Werror -Wextra
 #CFLAGS = -g -fsanitize=address
 
 NAME 	=	minishell

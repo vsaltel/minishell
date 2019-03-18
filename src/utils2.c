@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 16:47:09 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/13 18:07:30 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/18 12:41:29 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,24 @@ char			*ft_strfjoin(char const *s1, char const *s2, char const *f)
 	return (dst);
 }
 
-int				is_dir(char *str)
+char			*ft_strfdup(const char *s1, const char *f)
+{
+	char	*dest;
+
+	if (!(dest = ft_strnew(ft_strlen(s1))))
+		return (NULL);
+	ft_strcpy(dest, s1);
+	free((char *)f);
+	return (dest);
+}
+
+int				is_dir(int *ret, char *str, char *display)
 {
 	struct stat	fstat;
 
 	if (stat(str, &fstat) == -1)
 		return (2);
 	if (S_ISDIR(fstat.st_mode))
-		return (1);
+		return ((*ret = error_exec(2, "minishell", display, 1)));
 	return (0);
 }

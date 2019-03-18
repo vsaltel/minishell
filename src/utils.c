@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 19:35:32 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/13 16:47:30 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/18 15:07:40 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ char			**delete_env_variable(char *name, char **env)
 	k = 0;
 	while (env[i])
 	{
-		if (!(ft_strncmp(env[i], name, ft_strlen(name)) == 0 &&
-			env[i][ft_strlen(name)] == '='))
+		if (!(ft_strncmp(env[i], name, ft_strlen(name)) == 0
+			&& env[i][ft_strlen(name)] == '='))
 			tab[k++] = ft_strdup(env[i]);
 		i++;
 	}

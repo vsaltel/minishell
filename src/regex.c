@@ -6,7 +6,7 @@
 /*   By: vsaltel <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 17:18:53 by vsaltel           #+#    #+#             */
-/*   Updated: 2019/03/13 18:44:57 by vsaltel          ###   ########.fr       */
+/*   Updated: 2019/03/18 15:09:07 by vsaltel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static int	majl(char **l, char *r, char **env, int lastret)
 	return (s);
 }
 
-static void	dollar_exceptions(char **text, char **env, int lastret)
+void		dollar_exceptions(char **text, char **env, int lastret)
 {
 	int		s;
 	char	*l;
@@ -102,31 +102,29 @@ static void	dollar_exceptions(char **text, char **env, int lastret)
 	}
 }
 
-void		set_token_env(t_token *token, char **env, int lastret)
+void		tilde_exception(t_token *i, char **e)
 {
-	int		i;
 	char	*t;
-	char	*ret;
+	char	*r;
 
-	t = token->content;
-	i = 0;
+	t = i->content;
 	if (t[0] == '~' && (t[1] == '\0' || t[1] == '/' || t[1] == '$'))
+		(r = get_env_variable("HOME", 4, e)) ?
+			i->content = ft_strfjoin(r + 5, t + 1, i->content) : 0;
+	else if (t[0] == '~' && t[1] == '-' && (t[2] == '\0'
+		|| t[2] == '/' || t[2] == '$'))
+		(r = get_env_variable("OLDPWD", 6, e)) ?
+			i->content = ft_strfjoin(r + 7, t + 2, i->content) : 0;
+	else if (t[0] == '~' && t[1] == '+' && (t[2] == '\0'
+		|| t[2] == '/' || t[2] == '$'))
+		(r = get_env_variable("PWD", 3, e)) ?
+			i->content = ft_strfjoin(r + 4, t + 2, i->content) : 0;
+	else if (t[0] == '~' && (r = get_env_variable(&t[1], ft_strlen(&t[1]), e)))
+		i->content = ft_strfdup(r + ft_strlen(&t[1]) + 1, i->content);
+	else if (t[0] == '~')
 	{
-		if ((ret = get_env_variable("HOME", 4, env)))
-			token->content = ft_strfjoin(ret + 5, t + 1, token->content);
+		if (!access((r = ft_strjoin("/Users/", &t[1])), F_OK))
+			i->content = ft_strfdup(r, i->content);
+		free(r);
 	}
-	else if (t[0] == '~' && t[1] == '-' && (t[2] == '\0' ||
-				t[2] == '/' || t[2] == '$'))
-	{
-		if ((ret = get_env_variable("OLDPWD", 6, env)))
-			token->content = ft_strfjoin(ret + 7, t + 2, token->content);
-	}
-	else if (t[0] == '~' && t[1] == '+' && (t[2] == '\0' ||
-				t[2] == '/' || t[2] == '$'))
-	{
-		if ((ret = get_env_variable("PWD", 3, env)))
-			token->content = ft_strfjoin(ret + 4, t + 2, token->content);
-	}
-	if (ft_strlen(token->content + 1) > 0)
-		dollar_exceptions(&token->content, env, lastret);
 }
